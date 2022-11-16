@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'mapPage.dart';
 import 'carList.dart';
+import 'signIn.dart';
 
 //**********Login and About PAGE***********
 void main() => runApp(BackgroundVideo());
@@ -167,7 +168,12 @@ class LoginWidget extends StatelessWidget {
                     'Login as User',
                     style: TextStyle(color: Color(0xffffd544), fontSize: 20),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignIn()),
+                    );
+                  },
                 ),
               ),
               TextButton(
