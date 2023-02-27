@@ -1,11 +1,20 @@
+//import 'dart:js';
+
 import 'package:flutter/material.dart';
 
 import 'package:video_player/video_player.dart';
 import 'mapPage.dart';
 import 'carList.dart';
+import 'signIn.dart';
+
+import 'package:firebase_core/firebase_core.dart';
 
 //**********Login and About PAGE***********
-void main() => runApp(BackgroundVideo());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(BackgroundVideo());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
@@ -62,10 +71,10 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        // Adjusted theme colors to match logo.
-        primaryColor: Color(0xffb55e28),
-        accentColor: Color(0xffffd544),
-      ),
+          // Adjusted theme colors to match logo.
+          //primaryColor: Color(0xffb55e28),
+          //accentColor: Color(0xffffd544),
+          ),
       home: SafeArea(
         child: Scaffold(
           // TODO 6: Create a Stack Widget
@@ -141,11 +150,12 @@ class LoginWidget extends StatelessWidget {
             children: <Widget>[
               ButtonTheme(
                 minWidth: 300.0,
-                child: RaisedButton(
-                  color: Color(0xff00539f),
+                child: ElevatedButton(
+                  //color: Color(0xff00539f),
                   child: Text(
                     'Login as Guest',
-                    style: TextStyle(color: Color(0xffffd544), fontSize: 20),
+                    style:
+                        TextStyle(/*color: Color(0xffffd544),*/ fontSize: 20),
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -161,20 +171,28 @@ class LoginWidget extends StatelessWidget {
               ),
               ButtonTheme(
                 minWidth: 300.0,
-                child: RaisedButton(
-                  color: Color(0xff00539f),
+                child: ElevatedButton(
+                  //color: Color(0xff00539f),
                   child: Text(
                     'Login as User',
-                    style: TextStyle(color: Color(0xffffd544), fontSize: 20),
+                    style:
+                        TextStyle(/*color: Color(0xffffd544),*/ fontSize: 20),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    // Call to Google OAuth to allow user to sign in
+                    //done();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignIn()),
+                    );
+                  },
                 ),
               ),
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(
                     fontSize: 15,
-                    color: Color(0xff00539f),
+                    /*color: Color(0xff00539f),*/
                   ),
                 ),
                 onPressed: () {
@@ -220,10 +238,7 @@ class _AboutUs extends State {
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             tooltip: 'Back',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BackgroundVideo()),
-              );
+              Navigator.pop(context);
             },
           ),
         ),
