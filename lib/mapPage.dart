@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:scale_city/line.dart';
@@ -63,6 +64,8 @@ class _MapPageState extends State<MapPage> {
   List<MapLine> drawLines = [];//The set to store the map line info
   List<MapArc> drawArcs = [];//The set to store the map arc info
 
+  Socket socket;
+
   // final List<Area> _bigAreas = [
   //   Area(name: "1", x: 158, y: 113, width: 318, height: 81),
   //   Area(name: "2", x: 521, y: 113, width: 266, height: 81),
@@ -103,6 +106,8 @@ class _MapPageState extends State<MapPage> {
   double startTapY = 0;//the y axis of the position that user tapped
   double endTapX = 0;//the x axis of the start position
   double endTapY = 0;//the x axis of the end position
+  String startNode = "";
+  String endNode = "";
 
   bool isStart = true;
   bool isEnd = false;
@@ -111,6 +116,7 @@ class _MapPageState extends State<MapPage> {
   //Initialze the state of page
   @override
   void initState() {
+    connect();
     super.initState();
     // print("initstate");
     var mapConvert =
@@ -190,6 +196,7 @@ class _MapPageState extends State<MapPage> {
     }
     _startFocusNode.removeListener(_setInput);
     _endFocusNode.removeListener(_setInput);
+    socket.destroy();
     super.dispose();
   }
 
@@ -208,6 +215,12 @@ class _MapPageState extends State<MapPage> {
     if (kDebugMode) {
       print("setInput 1: $isStart,$isEnd");
     }
+  }
+
+
+  connect() async {
+    socket = await Socket.connect("192.168.1.245", 54000);
+
   }
 
   // tap real position
@@ -270,6 +283,7 @@ class _MapPageState extends State<MapPage> {
       setState(() {
         startTapX = x;
         startTapY = y;
+        startNode = _minName;
       });
     }
     if (isEnd || isInit) {
@@ -277,8 +291,29 @@ class _MapPageState extends State<MapPage> {
       setState(() {
         endTapX = x;
         endTapY = y;
+        endNode = _minName;
       });
+
+      //ROBIN NOTES
+      //THE SOCKET PASSES IN START/END HERE AND THEN READS OUT THE PATH
+      if (socket != null) {
+        try {
+          socket.write(startNode+endNode);
+          socket.listen(onData);
+        } on Exception catch (exception) {
+          print(exception.toString());
+        }
+      }
+
+
     }
+
+  }
+
+  onData(Uint8List data){
+    String path = String.fromCharCodes(data);
+    print("path: $path");
+    List<String> path_lines = path.split(',');
   }
 
   
