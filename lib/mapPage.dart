@@ -20,6 +20,12 @@ import 'package:http/http.dart' as http;
 import 'poly.dart';
 
 import 'clientpage.dart';
+import 'signIn.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:page_transition/page_transition.dart';
+
+FirebaseAuth auth = FirebaseAuth.instance;
 
 class Area {
   String name = '';
@@ -56,12 +62,12 @@ class _MapPageState extends State<MapPage> {
   final double _mapW = 1000.0;
   final double _mapH = 1000.0;
 
-  List<MapNode> mapNodeList = [];//The set to store the map node info
-  List<MapLine> mapLineList = [];//The set to store the map line info
-  List<MapArc> mapArcsList = [];//The set to store the map arc info
+  List<MapNode> mapNodeList = []; //The set to store the map node info
+  List<MapLine> mapLineList = []; //The set to store the map line info
+  List<MapArc> mapArcsList = []; //The set to store the map arc info
 
-  List<MapLine> drawLines = [];//The set to store the map line info
-  List<MapArc> drawArcs = [];//The set to store the map arc info
+  List<MapLine> drawLines = []; //The set to store the map line info
+  List<MapArc> drawArcs = []; //The set to store the map arc info
 
   // final List<Area> _bigAreas = [
   //   Area(name: "1", x: 158, y: 113, width: 318, height: 81),
@@ -100,14 +106,18 @@ class _MapPageState extends State<MapPage> {
 
   // state
   double startTapX = 0; //the x axis of the position that user tapped
-  double startTapY = 0;//the y axis of the position that user tapped
-  double endTapX = 0;//the x axis of the start position
-  double endTapY = 0;//the x axis of the end position
+  double startTapY = 0; //the y axis of the position that user tapped
+  double endTapX = 0; //the x axis of the start position
+  double endTapY = 0; //the x axis of the end position
 
   bool isStart = true;
   bool isEnd = false;
   bool showArea = false;
-  
+
+  void signOut() async {
+    await auth.signOut();
+  }
+
   //Initialze the state of page
   @override
   void initState() {
@@ -172,7 +182,7 @@ class _MapPageState extends State<MapPage> {
     //     polys.add(Polygon(list,name: "x:${i+1},y: ${ii+1}"));
     //   }
     // }
-    
+
     //The map scale translate
     _tc.value = Matrix4.identity()
       ..translate(-(_mapW + _mapP * 2) / 4, -(_mapH + _mapP * 2) / 4);
@@ -281,17 +291,17 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  
   //Build the current page
   @override
   Widget build(BuildContext context) {
     int indexstart;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Map View'),
         elevation: 0.0,
         actions: <Widget>[
-          IconButton(//Confirm button for going to clientpage and send the info to client page
+          IconButton(
+              //Confirm button for going to clientpage and send the info to client page
               icon: const Icon(Icons.check, color: Colors.black),
               tooltip: 'confirm',
               onPressed: () {
@@ -314,10 +324,12 @@ class _MapPageState extends State<MapPage> {
               })
         ],
       ),
-      drawer: Drawer(//The set of buttons that can help user goes into the startpage, car info page.
+      drawer: Drawer(
+          //The set of buttons that can help user goes into the startpage, car info page.
           child: ListView(children: [
         UserAccountsDrawerHeader(
-            accountName: Text('IDS LAB'), accountEmail: Text('Welcome')),
+            accountName: Text('IDS LAB'),
+            accountEmail: Text('Welcome ${auth.currentUser.email}')),
         ListTile(
           title: const Text('Ride'),
           onTap: () {
@@ -338,14 +350,15 @@ class _MapPageState extends State<MapPage> {
           },
         ),
         ListTile(
-          title: const Text('Back to the login page'),
+          title: Text('Sign Out'),
           onTap: () {
             // Update the state of the app.
-            // //Navigator.pop(context);
             Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BackgroundVideo()),
-            );
+                context,
+                PageTransition(
+                    type: PageTransitionType.leftToRight,
+                    child: SignIn()));
+            signOut();
           },
         ),
       ])),
@@ -416,7 +429,8 @@ class _MapPageState extends State<MapPage> {
                       //
                       //   ),
 
-                      Positioned(//Draw the arc or line that user tapped
+                      Positioned(
+                        //Draw the arc or line that user tapped
                         top: 0,
                         left: 0,
                         right: 0,
@@ -463,7 +477,8 @@ class _MapPageState extends State<MapPage> {
                       //     // ),
                       //   ),
                       // ),
-                      Positioned(//show the map pin
+                      Positioned(
+                        //show the map pin
                         top: startTapY - 25,
                         left: startTapX - 25,
                         child: Image.asset(
@@ -472,7 +487,8 @@ class _MapPageState extends State<MapPage> {
                           height: 50,
                         ),
                       ),
-                      Positioned(//show the end pin on the map
+                      Positioned(
+                        //show the end pin on the map
                         top: endTapY - 25,
                         left: endTapX - 25,
                         child: Image.asset(
@@ -487,7 +503,8 @@ class _MapPageState extends State<MapPage> {
           ),
         ),
       ),
-      bottomSheet: Container(//for showing the start point and end point position information that used tapped
+      bottomSheet: Container(
+        //for showing the start point and end point position information that used tapped
         width: double.infinity,
         height: _sheetH,
         child: Padding(
@@ -536,9 +553,12 @@ class _MapPageState extends State<MapPage> {
                             showArea = !showArea;
                           });
                         },
-                        child: Text(showArea ? 'hide area' : 'show area')),//button for showing the index on the map?
+                        child: Text(showArea
+                            ? 'hide area'
+                            : 'show area')), //button for showing the index on the map?
                     TextButton(
-                        onPressed: () {//button for going to detailed page
+                        onPressed: () {
+                          //button for going to detailed page
                           Navigator.push(
                             context,
                             MaterialPageRoute(

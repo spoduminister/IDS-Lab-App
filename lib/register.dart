@@ -4,20 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
 
-void register(String email, String password) async {
-  try {
-    final userCreds = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'weak-password') {
-      print('The password provided is too weak.');
-    } else if (e.code == 'email-already-in-use') {
-      print('The account already exists for that email.');
-    }
-  } catch (e) {
-    print(e);
-  }
-}
-
 class Register extends StatefulWidget {
   @override
   State<Register> createState() => _Register();
@@ -28,6 +14,46 @@ class _Register extends State<Register> {
   TextEditingController emailCont = TextEditingController();
   TextEditingController passwCont = TextEditingController();
   TextEditingController passwConfirmCont = TextEditingController();
+
+  void errorMsg(String errMsg) {
+    AlertDialog alert = AlertDialog(
+      title: Text("Error!"),
+      content: Text(errMsg),
+      actions: [
+        ElevatedButton(
+          child: Text('Close'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.all(0)),
+        )
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void register(String email, String password) async {
+    try {
+      final userCreds = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        errorMsg('The password you have entered is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        errorMsg('The email entered is already in use by another account.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

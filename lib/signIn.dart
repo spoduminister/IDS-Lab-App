@@ -1,23 +1,12 @@
 import 'main.dart';
+import 'mapPage.dart';
 import 'package:flutter/material.dart';
+import 'register.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:page_transition/page_transition.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
-
-void signIn(String email, String password) async {
-  try {
-    final userCreds =
-        await auth.signInWithEmailAndPassword(email: email, password: password);
-    final user = userCreds.user;
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      print('No user found for that email.');
-    } else if (e.code == 'wrong-password') {
-      print('Incorrect email or password.');
-    }
-  }
-}
 
 class SignIn extends StatefulWidget {
   @override
@@ -29,6 +18,44 @@ class _SignInState extends State<SignIn> {
   TextEditingController emailCont = TextEditingController();
   TextEditingController passwCont = TextEditingController();
 
+  void errorMsg(String errMsg) {
+    AlertDialog alert = AlertDialog(
+      title: Text("Error!"),
+      content: Text(errMsg),
+      actions: [
+        ElevatedButton(
+          child: Text('Close'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.all(0)),
+        )
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void signIn(String email, String password) async {
+    try {
+      final userCreds = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        errorMsg('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        errorMsg('Incorrect email or password.');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,9 +65,10 @@ class _SignInState extends State<SignIn> {
             leading: Padding(
               padding: const EdgeInsets.all(0.0),
               child: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: Icon(Icons.home),
                 color: Colors.white,
                 onPressed: () {
+                  //Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: BackgroundVideo()));
                   Navigator.pop(context);
                 },
               ),
@@ -64,7 +92,7 @@ class _SignInState extends State<SignIn> {
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: TextField(
-                        obscureText: seePass,
+                        obscureText: !seePass,
                         controller: passwCont,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -77,8 +105,8 @@ class _SignInState extends State<SignIn> {
                               });
                             },
                             icon: Icon(seePass
-                                ? Icons.remove_red_eye
-                                : Icons.password),
+                                ? Icons.password
+                                : Icons.remove_red_eye),
                           ),
                         ),
                       )),
@@ -87,6 +115,14 @@ class _SignInState extends State<SignIn> {
                       child: ElevatedButton(
                         onPressed: () {
                           signIn(emailCont.text, passwCont.text);
+                          auth.authStateChanges().listen((User user) {
+                            if (user != null) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MapPage()));
+                            }
+                          });
                         },
                         child: Text('Login',
                             style: TextStyle(color: Colors.white)),
@@ -101,9 +137,14 @@ class _SignInState extends State<SignIn> {
                         children: <Widget>[
                           const Text('Don\'t have an account?'),
                           TextButton(
-                            child: Text('Register',
-                                style: TextStyle(color: Colors.blue)),
-                          ),
+                              child: Text('Register',
+                                  style: TextStyle(color: Colors.blue)),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Register()));
+                              }),
                         ],
                       ))
                 ],

@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FlutterApp',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.black12,
         accentColor: Colors.orange,
@@ -267,18 +267,6 @@ class _AboutUs extends State {
                 ),
               )))
         ])))
-        // body: new Container(
-        //   child: new Text(
-        //     "Welcome to Professor Andreas Malikopoulos’ Information and Decision Science (IDS) lab! The overarching goal of the IDS Lab is to enhance understanding of large-scale, complex cyber-physical systems (CPS) and establish rigorous theories and algorithms for making CPS able to realize how to improve their performance over time while interacting with their environment. The emphasis is on applications related to emerging mobility systems (e.g., connected and automated vehicles, shared mobility), sociotechnical systems, social media, and smart cities.",
-        //     style: new TextStyle(
-        //         fontSize: 18.0,
-        //         color: Colors.black,
-        //         fontWeight: FontWeight.w200,
-        //         fontFamily: "Roboto"),
-        //   ),
-        //   padding: const EdgeInsets.fromLTRB(50.0, 50.0, 50.0, 179.0),
-        //   alignment: Alignment.center,
-        // ),
         );
   }
 }
