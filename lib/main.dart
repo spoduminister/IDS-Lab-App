@@ -151,7 +151,7 @@ class LoginWidget extends StatelessWidget {
               ButtonTheme(
                 minWidth: 300.0,
                 child: ElevatedButton(
-                  //color: Color(0xff00539f),
+
                   child: Text(
                     'Login as Guest',
                     style:
@@ -172,7 +172,7 @@ class LoginWidget extends StatelessWidget {
               ButtonTheme(
                 minWidth: 300.0,
                 child: ElevatedButton(
-                  //color: Color(0xff00539f),
+
                   child: Text(
                     'Login as User',
                     style:
