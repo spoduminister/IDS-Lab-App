@@ -29,6 +29,9 @@ dependencies:
   # Video Player Dependency: https://pub.dev/packages/video_player
   video_player: ^2.2.7
   meta: ^1.7.0
+  firebase_core: ^2.7.0
+  firebase_auth: ^4.2.9
+  page_transition: ^2.0.9
 
 
 dev_dependencies:
@@ -67,6 +70,7 @@ flutter:
     - assets/map_pin.png
     - assets/Aboutpage.png
     - assets/detail-image.png
+    - assets/spencerlocation.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
