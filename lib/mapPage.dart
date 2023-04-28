@@ -219,7 +219,9 @@ class _MapPageState extends State<MapPage> {
 
 
   connect() async {
-    socket = await Socket.connect("192.168.1.245", 54000);
+    String ip = "172.17.104.234"; //robin
+    //String ip = "192.168.1.245"; //mainframe ip
+    socket = await Socket.connect(ip, 54000);
 
   }
 
@@ -264,12 +266,12 @@ class _MapPageState extends State<MapPage> {
         print("choose line:${closedLines.length}, ${closedArcs.length}");
       }
 
-      setState(() {
+      /*setState(() {
         setState(() {
           drawLines = closedLines;
           drawArcs = closedArcs;
         });
-      });
+      });*/
     }
     if (kDebugMode) {
       print("min distance:$_minName: $_min,$x, $y");
@@ -311,10 +313,27 @@ class _MapPageState extends State<MapPage> {
   }
 
   onData(Uint8List data){
-    String path = String.fromCharCodes(data);
+    //String path = String.fromCharCodes(data);
+    String output = utf8.decode(data);
+    String path = output.split('/')[1];
+    print("OnData test");
     print("path: $path");
-    List<String> path_lines = path.split(',');
+    List<String> pathLines = path.split(',');
+    drawArcs = [];
+    drawLines = [];
+    for(String l in pathLines){
+      if(l.startsWith('A')){
+        var arc = mapArcsList.where((e) => e.name == l).first;
+        drawArcs.add(arc);
+        print(l);
+      } else if (l.startsWith('S')){
+        var line = mapLineList.where((e) => e.name == l).first;
+        drawLines.add(line);
+        print(l);
+      }
+    }
   }
+
 
   
   //Build the current page
