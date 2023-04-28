@@ -61,14 +61,14 @@ class _ClientPageState extends State<ClientPage> {
           title: Text("ATTENTION"),
           content: Text("You will leave this page and disconnect with server"),
           actions: <Widget>[
-            ElevatedButton(
+            TextButton(
               child: Text("Quit", style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
             ),
-            ElevatedButton(
+            TextButton(
               child: Text("Annuler", style: TextStyle(color: Colors.grey)),
               onPressed: () {
                 Navigator.of(context).pop();

@@ -1,11 +1,20 @@
+//import 'dart:js';
+
 import 'package:flutter/material.dart';
 
 import 'package:video_player/video_player.dart';
 import 'mapPage.dart';
 import 'carList.dart';
+import 'signIn.dart';
+
+import 'package:firebase_core/firebase_core.dart';
 
 //**********Login and About PAGE***********
-void main() => runApp(BackgroundVideo());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(BackgroundVideo());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
@@ -14,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FlutterApp',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.black12,
         accentColor: Colors.orange,
@@ -62,10 +71,10 @@ class _BackgroundVideoState extends State<BackgroundVideo> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        // Adjusted theme colors to match logo.
-        primaryColor: Color(0xffb55e28),
-        accentColor: Color(0xffffd544),
-      ),
+          // Adjusted theme colors to match logo.
+          //primaryColor: Color(0xffb55e28),
+          //accentColor: Color(0xffffd544),
+          ),
       home: SafeArea(
         child: Scaffold(
           // TODO 6: Create a Stack Widget
@@ -142,9 +151,11 @@ class LoginWidget extends StatelessWidget {
               ButtonTheme(
                 minWidth: 300.0,
                 child: ElevatedButton(
+
                   child: Text(
                     'Login as Guest',
-                    style: TextStyle(color: Color(0xffffd544), fontSize: 20),
+                    style:
+                        TextStyle(/*color: Color(0xffffd544),*/ fontSize: 20),
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -161,18 +172,27 @@ class LoginWidget extends StatelessWidget {
               ButtonTheme(
                 minWidth: 300.0,
                 child: ElevatedButton(
+
                   child: Text(
                     'Login as User',
-                    style: TextStyle(color: Color(0xffffd544), fontSize: 20),
+                    style:
+                        TextStyle(/*color: Color(0xffffd544),*/ fontSize: 20),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    // Call to Google OAuth to allow user to sign in
+                    //done();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignIn()),
+                    );
+                  },
                 ),
               ),
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(
                     fontSize: 15,
-                    color: Color(0xff00539f),
+                    /*color: Color(0xff00539f),*/
                   ),
                 ),
                 onPressed: () {
@@ -212,56 +232,42 @@ class _AboutUs extends State {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          backgroundColor: Colors.white,
-          title: new Text('IDS Lab'),
+          backgroundColor: Colors.blue,
+          title: Text('Who are we?', style: TextStyle(color: Colors.black)),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             tooltip: 'Back',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BackgroundVideo()),
-              );
+              Navigator.pop(context);
             },
           ),
         ),
+        backgroundColor: Colors.yellow[300],
         body: new Container(
-            child: new Center(
-                child: new Column(children: <Widget>[
-          new Image(image: AssetImage('assets/Aboutpage.png')),
-          new Container(
-              padding: EdgeInsets.all(10),
-              child: new Center(
-                  child: RichText(
-                text: TextSpan(
-                  text:
-                      'Welcome to Professor Andreas Malikopoulos’ Information and Decision Science (IDS) lab!\n',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w200,
-                      fontFamily: "Roboto"),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text:
-                            'The overarching goal of the IDS Lab is to enhance understanding of large-scale, complex cyber-physical systems (CPS) and establish rigorous theories and algorithms for making CPS able to realize how to improve their performance over time while interacting with their environment. The emphasis is on applications related to emerging mobility systems (e.g., connected and automated vehicles, shared mobility), sociotechnical systems, social media, and smart cities.',
-                        style: TextStyle(fontWeight: FontWeight.bold))
-                  ],
-                ),
-              )))
-        ])))
-        // body: new Container(
-        //   child: new Text(
-        //     "Welcome to Professor Andreas Malikopoulos’ Information and Decision Science (IDS) lab! The overarching goal of the IDS Lab is to enhance understanding of large-scale, complex cyber-physical systems (CPS) and establish rigorous theories and algorithms for making CPS able to realize how to improve their performance over time while interacting with their environment. The emphasis is on applications related to emerging mobility systems (e.g., connected and automated vehicles, shared mobility), sociotechnical systems, social media, and smart cities.",
-        //     style: new TextStyle(
-        //         fontSize: 18.0,
-        //         color: Colors.black,
-        //         fontWeight: FontWeight.w200,
-        //         fontFamily: "Roboto"),
-        //   ),
-        //   padding: const EdgeInsets.fromLTRB(50.0, 50.0, 50.0, 179.0),
-        //   alignment: Alignment.center,
-        // ),
+          child: new Column(children: <Widget>[
+            new Center(
+              child: new Text('Welcome to Professor Andreas Malikopoulos’ Information and Decision Science (IDS) Lab!\n',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center,),
+            ),
+            new Container(
+              height: 250.0,
+              width: 400.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black),
+              ),
+              child: Text('The overarching goal of the IDS Lab is to enhance understanding of large-scale, complex cyber-physical systems (CPS) and establish rigorous theories and algorithms for making CPS able to realize how to improve their performance over time while interacting with their environment. The emphasis is on applications related to emerging mobility systems (e.g., connected and automated vehicles, shared mobility), sociotechnical systems, social media, and smart cities.',
+              style: TextStyle(fontSize: 18)),
+            ),
+            Padding(padding: EdgeInsets.all(10)),
+            new Center(
+              child: new Text('Contact Us', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+            new Text('Location: 130 Academy St, Newark, DE 19716', style: TextStyle(fontSize: 18)),
+            new Text('Andreas Malikopoulos: andreas@udel.edu', style: TextStyle(fontSize: 18)),
+            Image.asset('assets/spencerlocation.png', height: 335.0),
+          ])
+        )
         );
   }
 }
