@@ -6,6 +6,7 @@ import 'register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 
+// Firebase instance that will be used for signing in/out
 FirebaseAuth auth = FirebaseAuth.instance;
 
 class SignIn extends StatefulWidget {
@@ -18,9 +19,12 @@ class _SignInState extends State<SignIn> {
   TextEditingController emailCont = TextEditingController();
   TextEditingController passwCont = TextEditingController();
 
+  // error message function that will take in a string to display to the user
+  // defining the nature of the error that occur when a sign in was attempted
   void errorMsg(String errMsg) {
+    // Creating the alert that will be shown
     AlertDialog alert = AlertDialog(
-      title: Text("Error!"),
+      title: Text('Error!'),
       content: Text(errMsg),
       actions: [
         ElevatedButton(
@@ -35,6 +39,7 @@ class _SignInState extends State<SignIn> {
         )
       ],
     );
+    // Showing the alert on screen
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -43,10 +48,22 @@ class _SignInState extends State<SignIn> {
     );
   }
 
+  // Attempts to invoke Firebase's signInWithEmailAndPassword function with the
+  // information that the user provided. If the sign in is unsuccessful, an error
+  // will display on screen.
   void signIn(String email, String password) async {
     try {
-      final userCreds = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      final userCreds = await auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then(
+            (value) => {
+              if (value.user != null) {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) {
+                  return MapPage();
+                })))
+              }
+            },
+          );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         errorMsg('No user found for that email.');
@@ -68,8 +85,7 @@ class _SignInState extends State<SignIn> {
                 icon: Icon(Icons.home),
                 color: Colors.white,
                 onPressed: () {
-                  //Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: BackgroundVideo()));
-                  Navigator.pop(context);
+                  Navigator.push(context, PageTransition(type: PageTransitionType.leftToRight, child: BackgroundVideo()));
                 },
               ),
             ),
@@ -100,6 +116,7 @@ class _SignInState extends State<SignIn> {
                           prefixIcon: Icon(Icons.lock),
                           suffixIcon: IconButton(
                             onPressed: () {
+                              // Button will show/hide the user's input for password
                               setState(() {
                                 seePass = !seePass;
                               });
@@ -115,14 +132,6 @@ class _SignInState extends State<SignIn> {
                       child: ElevatedButton(
                         onPressed: () {
                           signIn(emailCont.text, passwCont.text);
-                          auth.authStateChanges().listen((User user) {
-                            if (user != null) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MapPage()));
-                            }
-                          });
                         },
                         child: Text('Login',
                             style: TextStyle(color: Colors.white)),

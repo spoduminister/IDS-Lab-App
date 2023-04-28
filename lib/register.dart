@@ -15,10 +15,12 @@ class _Register extends State<Register> {
   TextEditingController passwCont = TextEditingController();
   TextEditingController passwConfirmCont = TextEditingController();
 
-  void errorMsg(String errMsg) {
+  // Displays an alert showing why the user's registration failed
+  void errorMsg(String msg) {
+    // Creating the alert that will be shown
     AlertDialog alert = AlertDialog(
-      title: Text("Error!"),
-      content: Text(errMsg),
+      title: Text('Error!'),
+      content: Text(msg),
       actions: [
         ElevatedButton(
           child: Text('Close'),
@@ -32,6 +34,7 @@ class _Register extends State<Register> {
         )
       ],
     );
+    // Showing the alert on screen
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -40,10 +43,46 @@ class _Register extends State<Register> {
     );
   }
 
-  void register(String email, String password) async {
+  // Displays an alert showing the user that their registration was successful
+  void success() {
+     // Creating the alert that will be shown
+    AlertDialog alert = AlertDialog(
+      title: Text('Success!'),
+      content: Text('Your registration was succesful. You can now sign in!'),
+      actions: [
+        ElevatedButton(
+          child: Text('OKAY'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.all(0)),
+        )
+      ],
+    );
+    // Showing the alert on screen
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  // Attempts to invoke Firebase's createUserWithEmailAndPassword function with
+  // the information that the user provided. If the registration is unsuccessful
+  // an error will display on screen.
+  Future<UserCredential> register(
+      BuildContext context, String email, String password) async {
     try {
       final userCreds = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((user) {
+        return user;
+      });
+      success();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         errorMsg('The password you have entered is too weak.');
@@ -98,6 +137,7 @@ class _Register extends State<Register> {
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
+                              // Button will show/hide the user's input for password
                               seePass = !seePass;
                             });
                           },
@@ -110,7 +150,9 @@ class _Register extends State<Register> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: ElevatedButton(
                       onPressed: () {
-                        register(emailCont.text, passwCont.text);
+                        Future<UserCredential> user =
+                            register(context, emailCont.text, passwCont.text);
+                        if (user != null) {}
                       },
                       child: Text('Register',
                           style: TextStyle(color: Colors.white)),

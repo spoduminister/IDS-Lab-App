@@ -232,8 +232,8 @@ class _AboutUs extends State {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          backgroundColor: Colors.white,
-          title: new Text('IDS Lab'),
+          backgroundColor: Colors.blue,
+          title: Text('Who are we?', style: TextStyle(color: Colors.black)),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             tooltip: 'Back',
@@ -242,31 +242,32 @@ class _AboutUs extends State {
             },
           ),
         ),
+        backgroundColor: Colors.yellow[300],
         body: new Container(
-            child: new Center(
-                child: new Column(children: <Widget>[
-          new Image(image: AssetImage('assets/Aboutpage.png')),
-          new Container(
-              padding: EdgeInsets.all(10),
-              child: new Center(
-                  child: RichText(
-                text: TextSpan(
-                  text:
-                      'Welcome to Professor Andreas Malikopoulos’ Information and Decision Science (IDS) lab!\n',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w200,
-                      fontFamily: "Roboto"),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text:
-                            'The overarching goal of the IDS Lab is to enhance understanding of large-scale, complex cyber-physical systems (CPS) and establish rigorous theories and algorithms for making CPS able to realize how to improve their performance over time while interacting with their environment. The emphasis is on applications related to emerging mobility systems (e.g., connected and automated vehicles, shared mobility), sociotechnical systems, social media, and smart cities.',
-                        style: TextStyle(fontWeight: FontWeight.bold))
-                  ],
-                ),
-              )))
-        ])))
+          child: new Column(children: <Widget>[
+            new Center(
+              child: new Text('Welcome to Professor Andreas Malikopoulos’ Information and Decision Science (IDS) Lab!\n',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center,),
+            ),
+            new Container(
+              height: 250.0,
+              width: 400.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black),
+              ),
+              child: Text('The overarching goal of the IDS Lab is to enhance understanding of large-scale, complex cyber-physical systems (CPS) and establish rigorous theories and algorithms for making CPS able to realize how to improve their performance over time while interacting with their environment. The emphasis is on applications related to emerging mobility systems (e.g., connected and automated vehicles, shared mobility), sociotechnical systems, social media, and smart cities.',
+              style: TextStyle(fontSize: 18)),
+            ),
+            Padding(padding: EdgeInsets.all(10)),
+            new Center(
+              child: new Text('Contact Us', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+            new Text('Location: 130 Academy St, Newark, DE 19716', style: TextStyle(fontSize: 18)),
+            new Text('Andreas Malikopoulos: andreas@udel.edu', style: TextStyle(fontSize: 18)),
+            Image.asset('assets/spencerlocation.png', height: 335.0),
+          ])
+        )
         );
   }
 }
