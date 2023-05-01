@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 import 'mapPage.dart';
 import 'carList.dart';
 import 'signIn.dart';
+import 'register.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
@@ -147,34 +148,13 @@ class LoginWidget extends StatelessWidget {
           height: 200,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ButtonTheme(
                 minWidth: 300.0,
                 child: ElevatedButton(
-
                   child: Text(
-                    'Login as Guest',
-                    style:
-                        TextStyle(/*color: Color(0xffffd544),*/ fontSize: 20),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapPage(
-                          title: 'Map Page',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              ButtonTheme(
-                minWidth: 300.0,
-                child: ElevatedButton(
-
-                  child: Text(
-                    'Login as User',
+                    'Login',
                     style:
                         TextStyle(/*color: Color(0xffffd544),*/ fontSize: 20),
                   ),
@@ -184,6 +164,24 @@ class LoginWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SignIn()),
+                    );
+                  },
+                ),
+              ),
+              ButtonTheme(
+                minWidth: 300.0,
+                child: ElevatedButton(
+                  child: Text(
+                    'Register',
+                    style:
+                        TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Register(),
+                      ),
                     );
                   },
                 ),
@@ -244,30 +242,35 @@ class _AboutUs extends State {
         ),
         backgroundColor: Colors.yellow[300],
         body: new Container(
-          child: new Column(children: <Widget>[
-            new Center(
-              child: new Text('Welcome to Professor Andreas Malikopoulos’ Information and Decision Science (IDS) Lab!\n',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center,),
+            child: new Column(children: <Widget>[
+          new Center(
+            child: new Text(
+              'Welcome to Professor Andreas Malikopoulos’ Information and Decision Science (IDS) Lab!\n',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              textAlign: TextAlign.center,
             ),
-            new Container(
-              height: 250.0,
-              width: 400.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black),
-              ),
-              child: Text('The overarching goal of the IDS Lab is to enhance understanding of large-scale, complex cyber-physical systems (CPS) and establish rigorous theories and algorithms for making CPS able to realize how to improve their performance over time while interacting with their environment. The emphasis is on applications related to emerging mobility systems (e.g., connected and automated vehicles, shared mobility), sociotechnical systems, social media, and smart cities.',
+          ),
+          new Container(
+            height: 250.0,
+            width: 400.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.black),
+            ),
+            child: Text(
+                'The overarching goal of the IDS Lab is to enhance understanding of large-scale, complex cyber-physical systems (CPS) and establish rigorous theories and algorithms for making CPS able to realize how to improve their performance over time while interacting with their environment. The emphasis is on applications related to emerging mobility systems (e.g., connected and automated vehicles, shared mobility), sociotechnical systems, social media, and smart cities.',
+                style: TextStyle(fontSize: 18)),
+          ),
+          Padding(padding: EdgeInsets.all(10)),
+          new Center(
+            child: new Text('Contact Us',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ),
+          new Text('Location: 130 Academy St, Newark, DE 19716',
               style: TextStyle(fontSize: 18)),
-            ),
-            Padding(padding: EdgeInsets.all(10)),
-            new Center(
-              child: new Text('Contact Us', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-            new Text('Location: 130 Academy St, Newark, DE 19716', style: TextStyle(fontSize: 18)),
-            new Text('Andreas Malikopoulos: andreas@udel.edu', style: TextStyle(fontSize: 18)),
-            Image.asset('assets/spencerlocation.png', height: 335.0),
-          ])
-        )
-        );
+          new Text('Andreas Malikopoulos: andreas@udel.edu',
+              style: TextStyle(fontSize: 18)),
+          Image.asset('assets/spencerlocation.png', height: 335.0),
+        ])));
   }
 }
