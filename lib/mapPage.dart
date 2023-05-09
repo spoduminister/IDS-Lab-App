@@ -139,55 +139,6 @@ class _MapPageState extends State<MapPage> {
           "mapNodeList length,${mapNodeList.length}, ${mapLineList.length}, ${mapArcsList.length}");
     }
 
-    // int xCount = 8;
-    // int yCount = 8;
-    // double xStep = (_mapW / xCount).floor().toDouble();
-    // double yStep = (_mapH / xCount).floor().toDouble();
-    //
-    // // 暂时自动生成
-    // // List<double> xList = [];
-    // int index = 0;
-    // for (var i = 0; i < xCount; i++) {
-    //   double startX = xStep * i;
-    //   double endX = i== xCount - 1 ? _mapW.toDouble(): xStep * (i+1);
-    //   for (var ii = 0; ii < yCount; ii++) {
-    //     index += 1;
-    //     List<Point> list = [];
-    //     double startY =  yStep * ii;
-    //     double endY = ii == yCount - 1? _mapH.toDouble() : yStep * (ii+1);
-    //
-    //     list.add(Point(startX,startY));
-    //     double nextX = startX + 1;
-    //     double nextY = startY;
-    //     // right -> down -> left -> up
-    //
-    //     // right
-    //     while (nextX != endX) {
-    //       nextX += 1;
-    //       list.add(Point(nextX,nextY));
-    //     }
-    //
-    //     // down
-    //     while (nextY != endY) {
-    //       nextY += 1;
-    //       list.add(Point(nextX,nextY));
-    //     }
-    //
-    //     // left
-    //     while (nextX != startX) {
-    //       nextX -= 1;
-    //       list.add(Point(nextX,nextY));
-    //     }
-    //
-    //     // up
-    //     while (nextY != startY) {
-    //       nextY -= 1;
-    //       list.add(Point(nextX,nextY));
-    //     }
-    //     // print("${i},${ii},${list}");
-    //     polys.add(Polygon(list,name: "x:${i+1},y: ${ii+1}"));
-    //   }
-    // }
 
     //The map scale translate
     _tc.value = Matrix4.identity()
@@ -228,6 +179,7 @@ class _MapPageState extends State<MapPage> {
   }
 
 
+  //socket connection function
   connect() async {
     String ip = "172.17.104.234"; //robin
     //String ip = "192.168.1.245"; //mainframe ip
@@ -235,7 +187,7 @@ class _MapPageState extends State<MapPage> {
 
   }
 
-  // tap real position
+  // function that gets called upon tapping the screen
   _onTap({double x, double y, isInit = false, areaName = ''}) {
     // find meaningful position
     // String polyname = '';
@@ -306,11 +258,10 @@ class _MapPageState extends State<MapPage> {
         endNode = _minName;
       });
 
-      //ROBIN NOTES
       //THE SOCKET PASSES IN START/END HERE AND THEN READS OUT THE PATH
       if (socket != null) {
         try {
-          socket.write(startNode+endNode);
+          socket.write("1" + "/" + startNode+endNode);
           socket.listen(onData);
         } on Exception catch (exception) {
           print(exception.toString());
@@ -323,23 +274,33 @@ class _MapPageState extends State<MapPage> {
   }
 
   onData(Uint8List data){
+    print("OnData test");
     //String path = String.fromCharCodes(data);
     String output = utf8.decode(data);
     String path = output.split('/')[1];
-    print("OnData test");
     print("path: $path");
     List<String> pathLines = path.split(',');
     drawArcs = [];
     drawLines = [];
     for(String l in pathLines){
       if(l.startsWith('A')){
-        var arc = mapArcsList.where((e) => e.name == l).first;
-        drawArcs.add(arc);
-        print(l);
+        var arcs = mapArcsList.where((e) => e.name.toLowerCase() == l.toLowerCase());
+        if (arcs.isEmpty){
+          print("arc "+l+" does not exist");
+        } else {
+          var arc = arcs.first;
+          drawArcs.add(arc);
+        }
+        print('test 2 '+l);
       } else if (l.startsWith('S')){
-        var line = mapLineList.where((e) => e.name == l).first;
-        drawLines.add(line);
-        print(l);
+        var lines = mapLineList.where((e) => e.name.toLowerCase() == l.toLowerCase());
+        if (lines.isEmpty){
+          print("line " + l + " does not exist");
+        } else {
+          var line = lines.first;
+          drawLines.add(line);
+        }
+        print('test 1 '+l);
       }
     }
   }

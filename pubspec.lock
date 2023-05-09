@@ -85,7 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.4"
-
   firebase_auth:
     dependency: "direct main"
     description:
@@ -128,7 +127,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
-
   flutter:
     dependency: "direct main"
     description: flutter
@@ -179,7 +177,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.2"
-
   intl:
     dependency: transitive
     description:
@@ -187,8 +184,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.0"
-=======
-
   js:
     dependency: transitive
     description:
