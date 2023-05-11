@@ -72,29 +72,6 @@ class _MapPageState extends State<MapPage> {
 
   Socket socket;
 
-  // final List<Area> _bigAreas = [
-  //   Area(name: "1", x: 158, y: 113, width: 318, height: 81),
-  //   Area(name: "2", x: 521, y: 113, width: 266, height: 81),
-  //   Area(name: "3", x: 832, y: 113, width: 69, height: 254),
-  //   Area(name: "4", x: 158, y: 239, width: 114, height: 91),
-  //   Area(name: "5", x: 317, y: 239, width: 159, height: 128),
-  //   Area(name: "5", x: 185, y: 367, width: 291, height: 33),
-  //   Area(name: "5", x: 185, y: 400, width: 268, height: 100),
-  //   Area(name: "6", x: 521, y: 239, width: 133, height: 128),
-  //   Area(name: "6", x: 533, y: 367, width: 182, height: 51),
-  //   Area(name: "6", x: 546, y: 418, width: 241, height: 103),
-  //   Area(name: "7", x: 704, y: 239, width: 83, height: 121),
-  //   Area(name: "8", x: 185, y: 590, width: 168, height: 126),
-  //   Area(name: "8", x: 353, y: 603, width: 32, height: 202),
-  //   Area(name: "8", x: 253, y: 716, width: 100, height: 118),
-  //   Area(name: "9", x: 396, y: 590, width: 57, height: 244),
-  //   Area(name: "10", x: 476, y: 779, width: 45, height: 57),
-  //   Area(name: "11", x: 547, y: 590, width: 132, height: 238),
-  //   Area(name: "11", x: 679, y: 570, width: 108, height: 119),
-  //   Area(name: "12", x: 105, y: 748, width: 115, height: 159),
-  //   Area(name: "13", x: 750, y: 704, width: 115, height: 159)
-  // ];
-
   final TextEditingController _startTextEditingController =
       TextEditingController(text: '');
   final TextEditingController _endTextEditingController =
@@ -189,20 +166,6 @@ class _MapPageState extends State<MapPage> {
 
   // function that gets called upon tapping the screen
   _onTap({double x, double y, isInit = false, areaName = ''}) {
-    // find meaningful position
-    // String polyname = '';
-    // int time = 0;
-    // while(polyname.isEmpty) {
-    //   for (var poly in polys) {
-    //     // print("poly name ${poly.name}");
-    //     if(poly.isPointInside(Point(min(x+time,_mapW),min(y+time,_mapH)))) {
-    //       print("is in ${poly.name},time:${time}");
-    //       polyname = poly.name;
-    //     }
-    //   }
-    //   time+=1;
-    // }
-
     double _min = 0;
     String _minName;
     for (var node in mapNodeList) {
@@ -228,19 +191,12 @@ class _MapPageState extends State<MapPage> {
         print("choose line:${closedLines.length}, ${closedArcs.length}");
       }
 
-      /*setState(() {
-        setState(() {
-          drawLines = closedLines;
-          drawArcs = closedArcs;
-        });
-      });*/
     }
     if (kDebugMode) {
       print("min distance:$_minName: $_min,$x, $y");
       print("min distance2:$isStart,$isEnd,$isInit");
     }
 
-    // String pointer = '${(x * 100 / _mapW).ceil()},${((_mapH - y) * 100 / _mapH).ceil()},area: ${_minName ?? ''}';
     String pointer = '${x.ceil()},${y.ceil()},area: ${_minName ?? ''}';
     if (isStart || isInit) {
       _startTextEditingController.value = TextEditingValue(text: pointer);
@@ -273,9 +229,8 @@ class _MapPageState extends State<MapPage> {
 
   }
 
+  //The function that calls when the socket receives data
   onData(Uint8List data){
-    print("OnData test");
-    //String path = String.fromCharCodes(data);
     String output = utf8.decode(data);
     String path = output.split('/')[1];
     print("path: $path");
@@ -291,7 +246,6 @@ class _MapPageState extends State<MapPage> {
           var arc = arcs.first;
           drawArcs.add(arc);
         }
-        print('test 2 '+l);
       } else if (l.startsWith('S')){
         var lines = mapLineList.where((e) => e.name.toLowerCase() == l.toLowerCase());
         if (lines.isEmpty){
@@ -300,7 +254,7 @@ class _MapPageState extends State<MapPage> {
           var line = lines.first;
           drawLines.add(line);
         }
-        print('test 1 '+l);
+        //Lines and Arcs are drawn further down in the build function
       }
     }
   }
